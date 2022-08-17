@@ -15,7 +15,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('product-sort popular')->hourly()->withoutOverlapping();
+        $schedule->command('product-sort best-seller')->hourly()->withoutOverlapping();
+        $schedule->command('product-sort high-price')->daily()->withoutOverlapping();
+        $schedule->command('product-sort low-price')->hourly()->withoutOverlapping();
     }
 
     /**

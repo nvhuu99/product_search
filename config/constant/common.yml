@@ -2,3 +2,12 @@ page_limit: 20
 
 product_sort:
   popular: popular_id
+  best-seller: best_seller_id
+  high-price: high_price_id
+  low-price: low_price_id
+
+product_sort_procedure:
+  popular: product_sort_popular
+  #best-seller:
+  #high-price:
+  #low-price:
