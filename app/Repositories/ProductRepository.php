@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\Product;
 use App\Interfaces\ProductRepositoryInterface;
 
-class ProductRepository
+class ProductRepository implements ProductRepositoryInterface
 {
     /**
      * Get the search params's name that the search() accepted.
@@ -13,21 +13,32 @@ class ProductRepository
     public function searchables()
     {
         return [
-            'sort', 
-            'search', 
-            'skip', 
-            'limit', 
-            'min_price', 
-            'max_price'
+            'sort',
+            'search',
+            'skip',
+            'limit',
+            'min_price',
+            'max_price',
+            'category_id'
         ];
     }
 
-    public function search(array $params = [], $fields = [])
+    /**
+     * Search for products
+     *
+     * @param array $params search params
+     * @param array|null $fields fields to select
+     * @return Illuminate\Support\Collection
+     */
+    public function search(array $params = [], array $fields = [])
     {
         $query = Product::query()
             ->skip($params['skip'] ?? 0)
             ->limit($params['limit'] ?? 20);
-        
+        if ($fields) {
+            $query->select($fields);
+        }
+
         if (!empty($params['search'])) {
             $query->whereFullText('name', $params['search']);
         }
@@ -47,14 +58,16 @@ class ProductRepository
         }
 
         if (isset($params['sort'])) {
-            // todo: 
+            // todo:
             $sortKey = 'popular_id';
             $query->leftJoin('product_sort', 'product.id', '=', "product_sort.$sortKey")
-                ->orderBy('product_sort.product_rank ASC');
+                ->orderBy('product_sort.product_rank');
+        }
+
+        if (isset($params['category_id'])) {
+            $query->where('category_id', $params['category_id']);
         }
 
         return $query->get();
-        // todo
-        // query result differ from DB
     }
 }

@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\Category;
 use App\Interfaces\CategoryRepositoryInterface;
 
-class CategoryRepository
+class CategoryRepository implements CategoryRepositoryInterface
 {
     /**
      * Get the search params's name that the search() accepted.
@@ -20,7 +20,7 @@ class CategoryRepository
 
     /**
      * Search for categories
-     * 
+     *
      * @param array $params search params
      * @param array|null $fields fields to select
      * @return Illuminate\Support\Collection

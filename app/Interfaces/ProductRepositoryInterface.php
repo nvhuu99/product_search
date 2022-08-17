@@ -9,5 +9,12 @@ interface ProductRepositoryInterface
      */
     public function searchables();
 
-    public function search(array $params = []);
+    /**
+     * Search for products
+     *
+     * @param array $params search params
+     * @param array|null $fields fields to select
+     * @return Illuminate\Support\Collection
+     */
+    public function search(array $params = [], array $fields = []);
 }

@@ -1,0 +1,15 @@
+single_value: 12345
+
+list_value: [a,b,c,d,e]
+
+nested:
+    key_name_1: 123
+    key_name_2:
+      key_name_2_child: 123
+      key_name_2_child_list:
+        abc: 'abc|label_abc'
+        def: 'abc|label_def'
+
+emotions:
+  0: "Tôi buồn|SAD"
+  1: "Tôi vui|HAPPY"
