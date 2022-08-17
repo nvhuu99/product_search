@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Product;
 use App\Interfaces\ProductRepositoryInterface;
+use App\Libs\ConfigUtil;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -32,9 +33,9 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function search(array $params = [], array $fields = [])
     {
-        $query = Product::query()
-            ->skip($params['skip'] ?? 0)
-            ->limit($params['limit'] ?? 20);
+        $sortOptions = ConfigUtil::get("product_sort");
+        $query = Product::query();
+
         if ($fields) {
             $query->select($fields);
         }
@@ -57,10 +58,9 @@ class ProductRepository implements ProductRepositoryInterface
             );
         }
 
-        if (isset($params['sort'])) {
-            // todo:
-            $sortKey = 'popular_id';
-            $query->leftJoin('product_sort', 'product.id', '=', "product_sort.$sortKey")
+        $sort = $params['sort'] ?? null;
+        if ($sort && isset($sortOptions[$sort])) {
+            $query->leftJoin('product_sort', 'product.id', '=', "product_sort.$sortOptions[$sort]")
                 ->orderBy('product_sort.product_rank');
         }
 
@@ -68,6 +68,9 @@ class ProductRepository implements ProductRepositoryInterface
             $query->where('category_id', $params['category_id']);
         }
 
-        return $query->get();
+        return $query
+                ->skip($params['skip'] ?? 0)
+                ->limit($params['limit'] ?? ConfigUtil::get('page_limit'))
+                ->get();
     }
 }

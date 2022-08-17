@@ -39,17 +39,21 @@ class ConfigUtil
      * @return string|array|null
      */
     public static function get(string $keyName) {
-        $configs = Yaml::parseFile(self::$configPath);
-        $keys = explode('.', $keyName);
-        $value = $configs;
+        try {
+            $configs = Yaml::parseFile(self::$configPath);
+            $keys = explode('.', $keyName);
+            $value = $configs;
 
-        // follow the nested key to get value
-        while($key = current($keys)) {
-            $value = $value[$key] ?? null;
-            next($keys);
+            // follow the nested key to get value
+            while($key = current($keys)) {
+                $value = $value[$key] ?? null;
+                next($keys);
+            }
+
+            return $value;
         }
-
-        return $value;
+        catch(\Throwable $e) {
+        }
     }
 
     /**

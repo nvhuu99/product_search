@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Libs\ConfigUtil;
 use App\Models\Category;
 use App\Interfaces\CategoryRepositoryInterface;
 
@@ -38,7 +39,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         // Todo make the Config util
-        $query->limit($params['limit'] ?? 20);
+        $query->limit($params['limit'] ?? ConfigUtil::get('page_limit'));
 
         return $query->get();
     }
