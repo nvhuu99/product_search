@@ -39,6 +39,12 @@ class ProductRepository implements ProductRepositoryInterface
         if ($fields) {
             $query->select($fields);
         }
+        else {
+            $query
+                ->select('*')
+                ->selectRaw('product.name AS name')
+                ->selectRaw('category.name AS category_name');
+        }
 
         if (!empty($params['search'])) {
             $query->whereFullText('name', $params['search']);
@@ -68,9 +74,13 @@ class ProductRepository implements ProductRepositoryInterface
             $query->where('category_id', $params['category_id']);
         }
 
-        return $query
+        $query
+                    ->join('product_factor', 'product_factor.product_id', '=', 'product.id')
+                ->join('category', 'product.category_id', '=', 'category.id')
                 ->skip($params['skip'] ?? 0)
                 ->limit($params['limit'] ?? ConfigUtil::get('page_limit'))
                 ->get();
+                $sql = $query->toSql();
+        return $query->get();
     }
 }

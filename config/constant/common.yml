@@ -8,6 +8,6 @@ product_sort:
 
 product_sort_procedure:
   popular: product_sort_popular
-  #best-seller:
-  #high-price:
-  #low-price:
+  best-seller: product_sort_best_seller
+  high-price: product_sort_high_price
+  low-price: product_sort_low_price
