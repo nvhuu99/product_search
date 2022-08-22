@@ -15,17 +15,13 @@ class ProductController extends Controller
     }
 
     /**
-     * Get list of products
+     * Products page
      */
     public function list(Request $request)
     {
         $params = $request->only($this->productRepo->searchables());
-        $query = $this->productRepo->search($params);
+        $products = $this->productRepo->search(array_filter($params));
 
-        $products = $query->map(function($item) {
-            return $item->toArray();
-        });
-
-        return response()->json($products);
+        return view('product_list', compact('products'));
     }
 }

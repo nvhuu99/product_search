@@ -19,18 +19,13 @@ class CategoryController extends Controller
      * Get list of categories
      */
     public function list(Request $request) {
-        dd(ConfigUtil::getMessage('SAD'));
-
         $params = $request->only($this->categoryRepo->searchables());
-        $query = $this->categoryRepo->search($params);
+        $query = $this->categoryRepo->search(array_filter($params));
 
-        $categories = $query->map(function($cat) {
-            return [
-                'name' => $cat->name,
-                'url' => route('product.list', ['category_id' => $cat->id])
-            ];
+        $categories = $query->each(function($cat) {
+            $url = route('product.list', ['category_id' => $cat->id, 'category_name' => $cat->name]);
+            echo "$cat->name : <a href=\"$url\"> $url </a>";
+            echo "<br>";
         });
-
-        return response()->json($categories);
     }
 }
